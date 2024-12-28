@@ -1,0 +1,63 @@
+"/* General body styling */
+body {
+    background-color: #F0F8FF; /* Light, calming blue */
+    font-family: 'Arial', sans-serif;
+    color: #333; /* Neutral dark grey for text */
+    margin: 0;
+    padding: 0;
+    line-height: 1.6; /* Improves readability */
+}
+/* Navigation styling */
+nav {
+    background-color: #4CAF50; /* Green navigation bar */
+    overflow: hidden; /* Clears floats for links */
+    padding: 10px 20px;
+    display: flex; /* Ensures links are inline */
+    justify-content: center; /* Centers navigation links */
+}
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    margin: 0 10px;
+    font-weight: bold;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+nav a:hover {
+    background-color: #45A049; /* Slightly darker green on hover */
+}
+/* Header styling */
+h1 {
+    color: #4CAF50; /* Matches the navigation bar */
+    text-align: center;
+    font-size: 2.5em;
+    margin-top: 20px;
+}
+h2 {
+    color: #333; /* Matches body text color */
+    font-size: 2em;
+    margin-top: 20px;
+}
+/* Paragraph styling */
+p {
+    font-size: 1.2em;
+    margin: 20px auto;
+    max-width: 800px;
+    text-align: center;
+}
+/* Link styling */
+a {
+    color: #4CAF50; /* Matches the header and navigation bar */
+    text-decoration: none;
+    font-weight: bold;
+}
+a:hover {
+    text-decoration: underline; /* Highlights links on hover */
+}
+/* Container styling for centered layout */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
