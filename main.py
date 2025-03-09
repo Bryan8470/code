@@ -87,8 +87,15 @@ def home():
 
 @app.route('/about')
 def about():
+    users = Enkhuils.query.first()
     f = "I love playing games, and I play piano on the moon"
-    return render_template('about.html', message=f)
+    return render_template('about.html', 
+                           message=f, 
+                           name=users.name, 
+                           dob=users.dob, 
+                           hobby=users.hobby, 
+                           grade=users.grade, 
+                           age=users.age)
 
 @app.route('/contact')
 def contact():
