@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" href="style.css">
-    <title>My First Webpage</title>
-</head>
-<body>
-    <h1>Welcome to my web</h1>
-    <h2>This is sub title. Just testing</h2>
-    <p>This is a paragraph of text. I'm learning HTML!</p>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+    <h1>Welcome to My Website</h1>
+    <h2>{{ message }}</h2>
+    <img src="{{ url_for('static', filename='images/IMG_5957.jpeg') }}" alt="Dashboard" style="width:70%">
+{% endblock %}
