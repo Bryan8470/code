@@ -69,18 +69,24 @@ class Enkhuils(db.Model):
 
     def __repr__(self):
         return f'<Role {self.name}>'
+# Your homework is here 
+# Create a class(table) named Post with columns: id, post, create, update(40, 41)
+
+
+
 
 # Initialize Flask-Admin
 admin = Admin(app, name="My Admin Panel", template_mode="bootstrap3")
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Role, db.session))
 admin.add_view(ModelView(Enkhuils, db.session))
+# admin.add_vews
 # Routes
 @app.route('/')
 def home():
     users = Enkhuils.query.first()
     if users:
-        greating = "Hi, I am testing my back-end. My name is {users.name}"
+        greating = f"Hi, I am testing my back-end. My name is {users.name}"
     else:
         greating = "Hi, I am testing my back-end."
     return render_template('index.html', message=greating)
