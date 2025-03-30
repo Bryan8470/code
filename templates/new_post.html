@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Post</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/post.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Create a New Post</h1>
+        <form method="POST">
+            <label for="author_name">Author Name:</label>
+            <input type="text" id="author_name" name="author_name" required>
+
+            <label for="author_id">Author ID:</label>
+            <input type="number" id="author_id" name="author_id" required>
+
+            <label for="post">Post Content:</label>
+            <textarea id="post" name="post" rows="5" required></textarea>
+
+            <input type="submit" value="Submit Post">
+        </form>
+    </div>
+</body>
+</html>
+

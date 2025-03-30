@@ -70,6 +70,20 @@ class Enkhuils(db.Model):
     def __repr__(self):
         return f'<Role {self.name}>'
 
+# New Post Model
+class Post(db.Model):
+    __tablename__ = 'posts'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    post = db.Column(db.Text, nullable=False)
+    author_id = db.Column(db.Integer, nullable=False)
+    author_name = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.now())
+    updated_at = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
+
+    def __repr__(self):
+        return f"<Post {self.id} by {self.author_name}>"
+    
 # Protect Admin
 class SecureModelView(ModelView):
     def is_accessible(self):
@@ -83,6 +97,7 @@ admin = Admin(app, name="My Admin Panel", template_mode="bootstrap3")
 admin.add_view(SecureModelView(User, db.session))
 admin.add_view(SecureModelView(Role, db.session))
 admin.add_view(SecureModelView(Enkhuils, db.session))
+admin.add_view(SecureModelView(Post, db.session))
 
 # Routes
 @app.route('/')
@@ -190,6 +205,27 @@ def register():
     return render_template('register.html')
 
 
+# Show all posts
+@app.route('/posts')
+def show_posts():
+    posts = Post.query.order_by(Post.created_at.desc()).all()
+    return render_template('posts.html', posts=posts)
+
+# Create new post
+@app.route('/posts/new', methods=['GET', 'POST'])
+def create_post():
+    if request.method == 'POST':
+        post_content = request.form['post']
+        author_id = request.form['author_id']
+        author_name = request.form['author_name']
+
+        new_post = Post(post=post_content, author_id=author_id, author_name=author_name)
+        db.session.add(new_post)
+        db.session.commit()
+
+        return redirect(url_for('show_posts'))
+
+    return render_template('new_post.html')
 # Create database tables and run the app
 if __name__ == '__main__':
     with app.app_context():
