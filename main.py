@@ -6,7 +6,7 @@ from flask import Flask, render_template, redirect, url_for, flash, request, ses
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-
+from routes import register_blueprints
 
 
 # Initialize Flask app
@@ -18,6 +18,7 @@ app.config['BABEL_DEFAULT_TIMEZONE'] = 'UTC'  # Default timezone
 
 # Initialize database
 db = SQLAlchemy(app)
+register_blueprints(app)
 
 # Initialize Babel for Flask
 babel = Babel(app)
@@ -109,46 +110,10 @@ def home():
         greating = "Hi, I am testing my back-end."
     return render_template('index.html', message=greating)
 
-@app.route('/about')
-def about():
-    users = Enkhuils.query.first()
-    f = "I love playing games, and I play piano on the moon"
-    return render_template('about.html', 
-                           message=f, 
-                           name=users.name, 
-                           dob=users.dob, 
-                           hobby=users.hobby, 
-                           grade=users.grade, 
-                           age=users.age)
 
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
-
-@app.route("/calculator", methods=["GET", "POST"])
-def calculator():
-    result = None
-    if request.method == "POST":
-        try:
-            num1 = float(request.form["num1"])
-            num2 = float(request.form["num2"])
-            operation = request.form["operation"]
-
-            # Perform the calculation based on the operation
-            if operation == "+":
-                result = num1 + num2
-            elif operation == "-":
-                result = num1 - num2
-            elif operation == "*":
-                result = num1 * num2
-            elif operation == "/":
-                result = num1 / num2
-            else:
-                result = "Invalid operation"
-        except ValueError:
-            result = "Please enter valid numbers."
-
-    return render_template("calculator.html", result=result)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
