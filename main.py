@@ -7,6 +7,11 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from routes import register_blueprints
+from werkzeug.utils import secure_filename
+import os
+
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static/uploads')
 
 
 # Initialize Flask app
@@ -15,6 +20,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.sqlite'  # Database conf
 app.config['SECRET_KEY'] = 'mysecretkey'  # Required for Flask-Admin sessions
 app.config['BABEL_DEFAULT_LOCALE'] = 'en'  # Default language
 app.config['BABEL_DEFAULT_TIMEZONE'] = 'UTC'  # Default timezone
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Initialize database
 db = SQLAlchemy(app)
@@ -79,6 +86,7 @@ class Post(db.Model):
     post = db.Column(db.Text, nullable=False)
     author_id = db.Column(db.Integer, nullable=False)
     author_name = db.Column(db.String(255), nullable=False)
+    image_path = db.Column(db.String(255), nullable=True)
     created_at = db.Column(db.DateTime, default=db.func.now())
     updated_at = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
@@ -99,6 +107,11 @@ admin.add_view(SecureModelView(User, db.session))
 admin.add_view(SecureModelView(Role, db.session))
 admin.add_view(SecureModelView(Enkhuils, db.session))
 admin.add_view(SecureModelView(Post, db.session))
+
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
 
 # Routes
 @app.route('/')
@@ -183,8 +196,20 @@ def create_post():
         post_content = request.form['post']
         author_id = request.form['author_id']
         author_name = request.form['author_name']
+        image = request.files['image']
+        image_filename = None
 
-        new_post = Post(post=post_content, author_id=author_id, author_name=author_name)
+        if image and allowed_file(image.filename):
+            filename = secure_filename(image.filename)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            image_filename = filename
+            
+        new_post = Post(
+            post=post_content,
+              author_id=author_id, 
+              author_name=author_name,
+              image_path=image_filename
+              )
         db.session.add(new_post)
         db.session.commit()
 
@@ -194,5 +219,6 @@ def create_post():
 # Create database tables and run the app
 if __name__ == '__main__':
     with app.app_context():
+        Post.__table__.drop(db.engine)
         db.create_all()  # Ensure tables are created
     app.run(debug=True)
