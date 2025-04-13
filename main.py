@@ -125,7 +125,7 @@ def login():
         if user and user.check_password(password):
             login_user(user)
             flash('Login successful!', 'success')
-            return redirect(url_for('about'))
+            return redirect(url_for('about.about'))
         else:
             flash('Invalid email or password', 'danger')
 
